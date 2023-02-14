@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-
-import { fetchFromAPI } from "../utils/fetchFromAPI";
+import fetchResult from "../utils/searchResult";
 import { Videos } from "./";
 import { useParams } from "react-router-dom";
+import data from "../utils/searchResult";
+import { ImportSearchTerm } from "../utils/ImportSearchTerm";
 
 const SearchFeed = () => {
   const { searchTerm } = useParams();
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState(null);
+  console.log(videos);
   useEffect(() => {
-    fetchFromAPI(`search?part=snippet&q=${searchTerm}`).then((data) => {
-      setVideos(data.items);
-    });
+    let rawData = data[0];
+    setVideos(rawData?.contents);
   }, [searchTerm]);
 
   return (
@@ -25,6 +26,7 @@ const SearchFeed = () => {
         <span style={{ color: "#f31503" }}>{searchTerm} videos</span>
       </Typography>
       <Videos videos={videos}></Videos>
+      <ImportSearchTerm searchTerm={searchTerm} />
     </Box>
   );
 };
